@@ -4,6 +4,28 @@ This repository contains the infrastructure and code for an e-commerce backend b
 
 ## Architecture
 
+```mermaid
+flowchart TD
+    Client([Client Browser])
+    
+    subgraph Frontend [Static Content Hosting]
+        CF[Amazon CloudFront]
+        S3[(Amazon S3 Bucket)]
+    end
+    
+    subgraph Backend [Serverless API]
+        APIGW[API Gateway]
+        Lambda[AWS Lambda]
+        DDB[(Amazon DynamoDB)]
+    end
+    
+    Client -->|1. HTTPS Request for Website| CF
+    CF -->|2. Fetch static assets| S3
+    Client -->|3. REST API Call| APIGW
+    APIGW -->|4. Invoke| Lambda
+    Lambda -->|5. Query User Data| DDB
+```
+
 The project provisions the following AWS resources:
 *   **S3 Bucket:** Hosts the static frontend files (HTML, CSS, JS).
 *   **CloudFront Distribution:** A Content Delivery Network (CDN) to securely serve the static assets from the S3 bucket via HTTPS.
